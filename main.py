@@ -4,32 +4,29 @@ import math
 
 # load image to numpy array in grayscale
 image = Image.open('image.jpg').convert('L')
-A = np.array(image, 'float_')
+A = np.array(image, 'float64')
 
-AAT = A.dot(np.transpose(A))
-ATA = np.transpose(A).dot(A)
+(n, m) = A.shape
 
-def is_upper(A):
-    (n, m) = A.shape
-    for i in range(n):
-        for j in range(i-1):
-            if A[i][j]:
-                return False
-    return True
+U, s, VT = np.linalg.svd(A)
 
-def norm(v):
-    return math.sqrt(sum([x**2 for x in v]))
+tlen = min(n, m)
+Sigma = np.zeros(A.shape)
 
-def QRDecmp(A):
-    (n, m) = A.shape
-    if n != m: 
-        raise TypeError
-    R = A
-    Q = np.array([[0.0] * n for _ in range(n)])
+for i in range(tlen):
+    Sigma[i][i] = s[i]
 
-    for k in range(n-1):
-        
-
-def RFA(A):
-    while not is_upper(A):
-        
+B = U.dot(Sigma.dot(VT))
+Image.fromarray(np.uint8(B), 'L').save('100%.jpg', 'JPEG')
+t_1 = int(tlen/100)
+B = U[:, :t_1].dot(Sigma[:t_1, :t_1].dot(VT[:t_1]))
+Image.fromarray(np.uint8(B), 'L').save('1%.jpg', 'JPEG')
+t_10 = int(tlen/10)
+B = U[:, :t_10].dot(Sigma[:t_10, :t_10].dot(VT[:t_10]))
+Image.fromarray(np.uint8(B), 'L').save('10%.jpg', 'JPEG')
+half = int(tlen/2)
+B = U[:, :half].dot(Sigma[:half, :half].dot(VT[:half]))
+Image.fromarray(np.uint8(B), 'L').save('50%.jpg', 'JPEG')
+t_80 = int(tlen*4/5)
+B = U[:, :t_80].dot(Sigma[:t_80, :t_80].dot(VT[:t_80]))
+Image.fromarray(np.uint8(B), 'L').save('80%.jpg', 'JPEG')
