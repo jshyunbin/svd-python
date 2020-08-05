@@ -8,7 +8,7 @@ A = np.array(image, 'float64')
 
 (n, m) = A.shape
 
-U, s, VT = np.linalg.svd(A)
+U, s, VT = np.linalg.svd(A) # TODO: replace numpy function
 
 tlen = min(n, m)
 Sigma = np.zeros(A.shape)
